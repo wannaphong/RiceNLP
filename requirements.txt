@@ -1,0 +1,19 @@
+# Core (no language-specific backend)
+# Install language extras with:
+#   pip install ricenlp[thai]
+#   pip install ricenlp[vietnamese]
+#   pip install ricenlp[lao]
+#   pip install ricenlp[all]
+
+# Thai
+pythainlp>=5.0
+
+# Vietnamese
+underthesea>=1.3.3
+
+# Lao
+laonlp>=1.0.2
+
+# Development / testing
+pytest>=7.0
+pytest-cov>=4.0

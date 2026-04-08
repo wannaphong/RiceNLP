@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ricenlp"
+version = "0.1.0"
+description = "Southeast Asia Natural Language Processing library"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [{ name = "wannaphong" }]
+keywords = ["nlp", "natural language processing", "thai", "vietnamese", "lao", "southeast asia"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Text Processing :: Linguistic",
+]
+requires-python = ">=3.8"
+dependencies = []
+
+[project.optional-dependencies]
+thai = ["pythainlp>=5.0"]
+vietnamese = ["underthesea>=1.3.3"]
+lao = ["laonlp>=1.0.2"]
+all = [
+    "pythainlp>=5.0",
+    "underthesea>=1.3.3",
+    "laonlp>=1.0.2",
+]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/wannaphong/RiceNLP"
+"Bug Tracker" = "https://github.com/wannaphong/RiceNLP/issues"
+
+[tool.setuptools.packages.find]
+include = ["ricenlp*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
