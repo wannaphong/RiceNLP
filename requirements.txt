@@ -3,6 +3,7 @@
 #   pip install ricenlp[thai]
 #   pip install ricenlp[vietnamese]
 #   pip install ricenlp[lao]
+#   pip install ricenlp[tagalog]
 #   pip install ricenlp[all]
 # Note: Khmer and Burmese support is built-in (pure Python, no extra dependency needed)
 
@@ -14,6 +15,9 @@ underthesea>=1.3.3
 
 # Lao
 laonlp>=1.0.2
+
+# Tagalog
+calamanCy>=0.2.0
 
 # Development / testing
 pytest>=7.0

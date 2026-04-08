@@ -7,6 +7,7 @@ Provides a unified API for NLP tasks across Southeast Asian languages:
   - Lao (lo)        : powered by laonlp
   - Khmer (km)      : pure Python, no external dependency (ported from SEANLP)
   - Burmese (my)    : pure Python, no external dependency (ported from SEANLP)
+  - Tagalog (tl)    : powered by calamanCy (spaCy-based)
 """
 
 __version__ = "0.1.0"
@@ -18,8 +19,9 @@ LANG_VI = "vi"
 LANG_LO = "lo"
 LANG_KM = "km"
 LANG_MY = "my"
+LANG_TL = "tl"
 
-SUPPORTED_LANGUAGES = {LANG_TH, LANG_VI, LANG_LO, LANG_KM, LANG_MY}
+SUPPORTED_LANGUAGES = {LANG_TH, LANG_VI, LANG_LO, LANG_KM, LANG_MY, LANG_TL}
 
 
 def _get_lang_module(lang: str):
@@ -34,6 +36,8 @@ def _get_lang_module(lang: str):
         from ricenlp import khmer as _mod
     elif lang == LANG_MY:
         from ricenlp import burmese as _mod
+    elif lang == LANG_TL:
+        from ricenlp import tagalog as _mod
     else:
         raise ValueError(
             f"Unsupported language: '{lang}'. "
@@ -50,7 +54,7 @@ def word_tokenize(text: str, lang: str = LANG_TH) -> list:
     text : str
         Input text.
     lang : str
-        Language code (``'th'``, ``'vi'``, ``'lo'``, ``'km'``, or ``'my'``).
+        Language code (``'th'``, ``'vi'``, ``'lo'``, ``'km'``, ``'my'``, or ``'tl'``).
 
     Returns
     -------
@@ -68,7 +72,7 @@ def sent_tokenize(text: str, lang: str = LANG_TH) -> list:
     text : str
         Input text.
     lang : str
-        Language code (``'th'``, ``'vi'``, ``'lo'``, ``'km'``, or ``'my'``).
+        Language code (``'th'``, ``'vi'``, ``'lo'``, ``'km'``, ``'my'``, or ``'tl'``).
 
     Returns
     -------
@@ -86,7 +90,7 @@ def pos_tag(text: str, lang: str = LANG_TH) -> list:
     text : str
         Input text.
     lang : str
-        Language code (``'th'``, ``'vi'``, ``'lo'``, ``'km'``, or ``'my'``).
+        Language code (``'th'``, ``'vi'``, ``'lo'``, ``'km'``, ``'my'``, or ``'tl'``).
 
     Returns
     -------
