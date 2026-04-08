@@ -20,6 +20,8 @@ class TestRiceNLPImport(unittest.TestCase):
         self.assertEqual(ricenlp.LANG_TH, "th")
         self.assertEqual(ricenlp.LANG_VI, "vi")
         self.assertEqual(ricenlp.LANG_LO, "lo")
+        self.assertEqual(ricenlp.LANG_KM, "km")
+        self.assertEqual(ricenlp.LANG_MY, "my")
 
     def test_supported_languages(self):
         import ricenlp
@@ -27,6 +29,8 @@ class TestRiceNLPImport(unittest.TestCase):
         self.assertIn("th", ricenlp.SUPPORTED_LANGUAGES)
         self.assertIn("vi", ricenlp.SUPPORTED_LANGUAGES)
         self.assertIn("lo", ricenlp.SUPPORTED_LANGUAGES)
+        self.assertIn("km", ricenlp.SUPPORTED_LANGUAGES)
+        self.assertIn("my", ricenlp.SUPPORTED_LANGUAGES)
 
     def test_public_api(self):
         import ricenlp

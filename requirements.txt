@@ -4,6 +4,7 @@
 #   pip install ricenlp[vietnamese]
 #   pip install ricenlp[lao]
 #   pip install ricenlp[all]
+# Note: Khmer and Burmese support is built-in (pure Python, no extra dependency needed)
 
 # Thai
 pythainlp>=5.0

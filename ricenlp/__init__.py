@@ -2,9 +2,11 @@
 RiceNLP: Southeast Asia Natural Language Processing library.
 
 Provides a unified API for NLP tasks across Southeast Asian languages:
-  - Thai (th)  : powered by pythainlp
-  - Vietnamese (vi): powered by underthesea
-  - Lao (lo)   : powered by laonlp
+  - Thai (th)       : powered by pythainlp
+  - Vietnamese (vi) : powered by underthesea
+  - Lao (lo)        : powered by laonlp
+  - Khmer (km)      : pure Python, no external dependency (ported from SEANLP)
+  - Burmese (my)    : pure Python, no external dependency (ported from SEANLP)
 """
 
 __version__ = "0.1.0"
@@ -14,8 +16,10 @@ __author__ = "wannaphong"
 LANG_TH = "th"
 LANG_VI = "vi"
 LANG_LO = "lo"
+LANG_KM = "km"
+LANG_MY = "my"
 
-SUPPORTED_LANGUAGES = {LANG_TH, LANG_VI, LANG_LO}
+SUPPORTED_LANGUAGES = {LANG_TH, LANG_VI, LANG_LO, LANG_KM, LANG_MY}
 
 
 def _get_lang_module(lang: str):
@@ -26,6 +30,10 @@ def _get_lang_module(lang: str):
         from ricenlp import vietnamese as _mod
     elif lang == LANG_LO:
         from ricenlp import lao as _mod
+    elif lang == LANG_KM:
+        from ricenlp import khmer as _mod
+    elif lang == LANG_MY:
+        from ricenlp import burmese as _mod
     else:
         raise ValueError(
             f"Unsupported language: '{lang}'. "
@@ -42,7 +50,7 @@ def word_tokenize(text: str, lang: str = LANG_TH) -> list:
     text : str
         Input text.
     lang : str
-        Language code (``'th'``, ``'vi'``, or ``'lo'``).
+        Language code (``'th'``, ``'vi'``, ``'lo'``, ``'km'``, or ``'my'``).
 
     Returns
     -------
@@ -60,7 +68,7 @@ def sent_tokenize(text: str, lang: str = LANG_TH) -> list:
     text : str
         Input text.
     lang : str
-        Language code (``'th'``, ``'vi'``, or ``'lo'``).
+        Language code (``'th'``, ``'vi'``, ``'lo'``, ``'km'``, or ``'my'``).
 
     Returns
     -------
@@ -78,7 +86,7 @@ def pos_tag(text: str, lang: str = LANG_TH) -> list:
     text : str
         Input text.
     lang : str
-        Language code (``'th'``, ``'vi'``, or ``'lo'``).
+        Language code (``'th'``, ``'vi'``, ``'lo'``, ``'km'``, or ``'my'``).
 
     Returns
     -------
