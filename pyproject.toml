@@ -50,6 +50,7 @@ include = ["ricenlp*"]
 
 [tool.setuptools.package-data]
 "ricenlp.data" = ["*.txt"]
+"ricenlp._myan_word_breaker" = ["dictionary/*.txt", "corpus/*.txt"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

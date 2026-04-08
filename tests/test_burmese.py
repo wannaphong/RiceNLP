@@ -128,7 +128,7 @@ class TestDictWordTokenizeRevMin(unittest.TestCase):
 
 
 class TestBurmeseWordTokenize(unittest.TestCase):
-    """Top-level word_tokenize uses syllable segmentation (no external dep)."""
+    """Top-level word_tokenize uses myan-word-breaker dictionary segmentation."""
 
     def test_basic(self):
         from ricenlp import word_tokenize, LANG_MY
@@ -149,6 +149,21 @@ class TestBurmeseWordTokenize(unittest.TestCase):
         result = word_tokenize("", lang=LANG_MY)
         self.assertIsInstance(result, list)
         self.assertEqual(result, [])
+
+    def test_known_segmentation(self):
+        from ricenlp.burmese import word_tokenize
+
+        # "သဘာဝဟာသဘာဝပါ" should split into 4 known words
+        result = word_tokenize("သဘာဝဟာသဘာဝပါ")
+        self.assertEqual(result, ["သဘာဝ", "ဟာ", "သဘာဝ", "ပါ"])
+
+    def test_multi_sentence(self):
+        from ricenlp.burmese import word_tokenize
+
+        # Two sentences separated by ။ should both be segmented
+        result = word_tokenize("သဘာဝဟာသဘာဝပါ။သဘာဝပါ")
+        self.assertIsInstance(result, list)
+        self.assertTrue(len(result) >= 4)
 
 
 class TestBurmeseSentTokenize(unittest.TestCase):
@@ -181,6 +196,37 @@ class TestBurmesePosTag(unittest.TestCase):
 
         with self.assertRaises(NotImplementedError):
             pos_tag("မြန်မာ", lang=LANG_MY)
+
+
+class TestBurmeseGetWordlist(unittest.TestCase):
+    def test_returns_frozenset(self):
+        from ricenlp.burmese import get_wordlist
+
+        wl = get_wordlist()
+        self.assertIsInstance(wl, frozenset)
+
+    def test_nonempty(self):
+        from ricenlp.burmese import get_wordlist
+
+        self.assertTrue(len(get_wordlist()) > 0)
+
+    def test_contains_burmese_chars(self):
+        from ricenlp.burmese import get_wordlist
+
+        # At least some entries must contain Myanmar characters
+        wl = get_wordlist()
+        myanmar = [w for w in wl if any(0x1000 <= ord(c) <= 0x109F for c in w)]
+        self.assertTrue(len(myanmar) > 0)
+
+
+class TestZg2Uni(unittest.TestCase):
+    def test_converts_zawgyi_to_unicode(self):
+        from ricenlp._myan_word_breaker.rabbit import zg2uni
+
+        # A simple Zawgyi string; conversion should return a non-empty string
+        result = zg2uni("သဘာဝ")
+        self.assertIsInstance(result, str)
+        self.assertTrue(len(result) > 0)
 
 
 if __name__ == "__main__":

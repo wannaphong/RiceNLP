@@ -6,7 +6,7 @@ Provides a unified API for NLP tasks across Southeast Asian languages:
   - Vietnamese (vi) : powered by underthesea
   - Lao (lo)        : powered by laonlp
   - Khmer (km)      : pure Python, no external dependency (ported from SEANLP)
-  - Burmese (my)    : pure Python, no external dependency (ported from SEANLP)
+  - Burmese (my)    : pure Python, forked from myan-word-breaker + SEANLP
   - Tagalog (tl)    : powered by calamanCy (spaCy-based)
 """
 

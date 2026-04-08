@@ -1,12 +1,16 @@
 """Burmese (Myanmar) NLP module.
 
-All functionality is implemented in pure Python with no external dependencies,
-ported from SEANLP (https://github.com/zhaoshiyu/SEANLP):
+All functionality is implemented in pure Python with no external dependencies.
 
-* **Syllable segmentation** – rule-based Myanmar orthographic syllable
-  segmentation using Unicode character-class patterns.  Each base consonant
-  (or independent vowel) is grouped with its following subscript consonant,
-  medials, vowel signs, and diacritics to form an indivisible syllable cluster.
+* **Word segmentation** (:func:`word_tokenize`) – bigram-collocation
+  dictionary-based word segmentation forked from
+  `myan-word-breaker <https://github.com/stevenay/myan-word-breaker>`_
+  (MIT).  Bundled dictionary (~900 KB) from MCFNLP and corpus (~3.4 MB) from
+  Ko Ye Kyaw Thu's myPOS project are included in ``ricenlp/_myan_word_breaker/``.
+
+* **Syllable segmentation** (:func:`syllable_tokenize`) – rule-based Myanmar
+  orthographic syllable segmentation using Unicode character-class patterns,
+  ported from SEANLP.  Used as a fast, dependency-free fallback.
 
 * **Dict-based word segmentation** – four matching strategies ported from
   SEANLP's ``maxSegment``, ``minSegment``, ``reMaxSegment`` and
@@ -17,10 +21,12 @@ ported from SEANLP (https://github.com/zhaoshiyu/SEANLP):
   - :func:`dict_word_tokenize_rev`     – Backward Maximum Matching (BMM)
   - :func:`dict_word_tokenize_rev_min` – Backward Minimum Matching (BMinM)
 
-The top-level :func:`word_tokenize` and :func:`sent_tokenize` require no
-external package and use syllable segmentation and punctuation-based splitting
-respectively.  :func:`pos_tag` raises ``NotImplementedError`` as no
-dependency-free POS model is available.
+  When called without a *dictionary* argument the bundled grapheme-cluster
+  vocabulary from google/language-resources is used.
+
+:func:`sent_tokenize` uses punctuation-based splitting.
+:func:`pos_tag` raises ``NotImplementedError`` as no dependency-free POS
+model is currently available.
 """
 
 from __future__ import annotations
@@ -348,16 +354,34 @@ def dict_word_tokenize_rev_min(
 
 
 # ---------------------------------------------------------------------------
-# Top-level API (no external dependency)
+# Top-level API
 # ---------------------------------------------------------------------------
+
+# Lazy singleton – loaded on first call to word_tokenize
+_word_segmenter = None
+
+
+def _get_word_segmenter():
+    global _word_segmenter
+    if _word_segmenter is None:
+        from ricenlp._myan_word_breaker.word_segment import WordSegment
+        _word_segmenter = WordSegment()
+    return _word_segmenter
 
 
 def word_tokenize(text: str) -> list[str]:
-    """Tokenize Burmese *text* into syllable-level tokens.
+    """Tokenize Burmese *text* into words using dictionary-based segmentation.
 
-    Uses the rule-based syllable segmentation algorithm ported from SEANLP.
-    For dictionary-guided word segmentation use :func:`dict_word_tokenize`
-    and its variants.
+    Uses the bigram-collocation word segmenter forked from
+    `myan-word-breaker <https://github.com/stevenay/myan-word-breaker>`_
+    (MIT).  The bundled dictionary and corpus are loaded lazily on the first
+    call.
+
+    Falls back to :func:`syllable_tokenize` for any sentence segment that
+    cannot be processed (e.g. empty input).
+
+    For explicit dictionary-guided segmentation use
+    :func:`dict_word_tokenize` and its variants.
 
     Parameters
     ----------
@@ -368,7 +392,17 @@ def word_tokenize(text: str) -> list[str]:
     -------
     list of str
     """
-    return syllable_tokenize(text)
+    if not text:
+        return []
+    segmenter = _get_word_segmenter()
+    SegMethod = segmenter.SegmentationMethod
+    sentences = segmenter.normalize_break(
+        text, "unicode", SegMethod.sub_word_possibility
+    )
+    tokens: list[str] = []
+    for sentence_words in sentences:
+        tokens.extend(sentence_words)
+    return tokens
 
 
 def sent_tokenize(text: str) -> list[str]:
