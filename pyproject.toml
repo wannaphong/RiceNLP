@@ -48,5 +48,8 @@ Homepage = "https://github.com/wannaphong/RiceNLP"
 [tool.setuptools.packages.find]
 include = ["ricenlp*"]
 
+[tool.setuptools.package-data]
+"ricenlp.data" = ["*.txt"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

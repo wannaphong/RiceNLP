@@ -25,8 +25,46 @@ dependency-free POS model is available.
 
 from __future__ import annotations
 
+import importlib.resources
 import re
+from functools import lru_cache
 from typing import Collection
+
+# ---------------------------------------------------------------------------
+# Default dictionary (sourced from google/language-resources km/data/lexicon.tsv)
+# ---------------------------------------------------------------------------
+
+
+@lru_cache(maxsize=1)
+def _load_default_wordlist() -> frozenset[str]:
+    """Load the bundled Khmer wordlist extracted from google/language-resources.
+
+    The wordlist is loaded lazily and cached for subsequent calls.
+
+    Returns
+    -------
+    frozenset of str
+        The set of Khmer words from the bundled dictionary.
+    """
+    pkg = importlib.resources.files("ricenlp.data")
+    text = (pkg / "khmer_wordlist.txt").read_text(encoding="utf-8")
+    return frozenset(line for line in text.splitlines() if line)
+
+
+def get_wordlist() -> frozenset[str]:
+    """Return the bundled Khmer wordlist from google/language-resources.
+
+    The list is extracted from ``km/data/lexicon.tsv`` in the
+    `google/language-resources <https://github.com/google/language-resources>`_
+    project (CC-BY 4.0).
+
+    Returns
+    -------
+    frozenset of str
+        Khmer words included in the bundled dictionary.
+    """
+    return _load_default_wordlist()
+
 
 # ---------------------------------------------------------------------------
 # KCC segmentation (ported from SEANLP's KCCSegmentor logic)
@@ -185,7 +223,7 @@ def _bminm(text: str, vocab: set[str]) -> list[str]:
 
 def dict_word_tokenize(
     text: str,
-    dictionary: Collection[str],
+    dictionary: Collection[str] | None = None,
 ) -> list[str]:
     """Tokenize *text* using Forward Maximum Matching (FMM).
 
@@ -195,14 +233,15 @@ def dict_word_tokenize(
     ----------
     text : str
         Khmer input text.
-    dictionary : collection of str
-        Set / list of known Khmer words.
+    dictionary : collection of str, optional
+        Set / list of known Khmer words.  When *None* (the default) the
+        bundled wordlist from google/language-resources is used.
 
     Returns
     -------
     list of str
     """
-    vocab = set(dictionary)
+    vocab = set(dictionary) if dictionary is not None else _load_default_wordlist()
     if not vocab:
         return list(text)
     max_len = max(len(w) for w in vocab)
@@ -211,7 +250,7 @@ def dict_word_tokenize(
 
 def dict_word_tokenize_min(
     text: str,
-    dictionary: Collection[str],
+    dictionary: Collection[str] | None = None,
 ) -> list[str]:
     """Tokenize *text* using Forward Minimum Matching (FMinM).
 
@@ -221,14 +260,15 @@ def dict_word_tokenize_min(
     ----------
     text : str
         Khmer input text.
-    dictionary : collection of str
-        Set / list of known Khmer words.
+    dictionary : collection of str, optional
+        Set / list of known Khmer words.  When *None* (the default) the
+        bundled wordlist from google/language-resources is used.
 
     Returns
     -------
     list of str
     """
-    vocab = set(dictionary)
+    vocab = set(dictionary) if dictionary is not None else _load_default_wordlist()
     if not vocab:
         return list(text)
     return _fminm(text, vocab)
@@ -236,7 +276,7 @@ def dict_word_tokenize_min(
 
 def dict_word_tokenize_rev(
     text: str,
-    dictionary: Collection[str],
+    dictionary: Collection[str] | None = None,
 ) -> list[str]:
     """Tokenize *text* using Backward Maximum Matching (BMM).
 
@@ -246,14 +286,15 @@ def dict_word_tokenize_rev(
     ----------
     text : str
         Khmer input text.
-    dictionary : collection of str
-        Set / list of known Khmer words.
+    dictionary : collection of str, optional
+        Set / list of known Khmer words.  When *None* (the default) the
+        bundled wordlist from google/language-resources is used.
 
     Returns
     -------
     list of str
     """
-    vocab = set(dictionary)
+    vocab = set(dictionary) if dictionary is not None else _load_default_wordlist()
     if not vocab:
         return list(text)
     max_len = max(len(w) for w in vocab)
@@ -262,7 +303,7 @@ def dict_word_tokenize_rev(
 
 def dict_word_tokenize_rev_min(
     text: str,
-    dictionary: Collection[str],
+    dictionary: Collection[str] | None = None,
 ) -> list[str]:
     """Tokenize *text* using Backward Minimum Matching (BMinM).
 
@@ -272,14 +313,15 @@ def dict_word_tokenize_rev_min(
     ----------
     text : str
         Khmer input text.
-    dictionary : collection of str
-        Set / list of known Khmer words.
+    dictionary : collection of str, optional
+        Set / list of known Khmer words.  When *None* (the default) the
+        bundled wordlist from google/language-resources is used.
 
     Returns
     -------
     list of str
     """
-    vocab = set(dictionary)
+    vocab = set(dictionary) if dictionary is not None else _load_default_wordlist()
     if not vocab:
         return list(text)
     return _bminm(text, vocab)

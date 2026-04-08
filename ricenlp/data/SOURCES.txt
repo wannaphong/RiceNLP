@@ -1,0 +1,15 @@
+Khmer wordlist (khmer_wordlist.txt)
+===================================
+Extracted from the first column of km/data/lexicon.tsv in the
+google/language-resources project (https://github.com/google/language-resources).
+Licensed under the Creative Commons Attribution 4.0 International License
+(https://creativecommons.org/licenses/by/4.0/).
+Only entries where the spelling field contains Khmer Unicode characters
+(U+1780–U+17B5) have been retained.
+
+Burmese grapheme-cluster vocabulary (burmese_wordlist.txt)
+==========================================================
+Extracted from the first column of my/frequent_grapheme_clusters.tsv in the
+google/language-resources project (https://github.com/google/language-resources).
+Licensed under the Apache License, Version 2.0.
+Only entries containing Myanmar Unicode characters (U+1000–U+109F) have been retained.
